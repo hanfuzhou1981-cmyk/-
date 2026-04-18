@@ -83,6 +83,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 </style>
 </head>
 <body>
+<div id="unlock-banner" style="background:#C8543A;color:#fff;text-align:center;padding:12px 16px;font-family:DM Sans,sans-serif;font-size:14px;cursor:pointer;position:sticky;top:0;z-index:200" onclick="unlockAudio()">
+  点这里开启声音 🔊
+</div>
 <div class="header">
   <div class="header-row"><h1>Belajar Bahasa</h1><span class="header-sub">500词印尼语</span></div>
   <div class="vpill" id="vpill"><span class="vdot"></span><span id="vlbl">检测语音...</span></div>
@@ -310,32 +313,89 @@ let currentTopic=0,flashCards=[],flashOrder=[],flashIdx=0,known=new Set();
 let quizCards=[],quizOrder=[],quizIdx=0,quizCorrect=0,quizTotal=0;
 let convoIdx=0,convoStep=0,convoTurns=0,isDailyMode=false,currentAudio=null,streak=0;
 
-function speak(text,btnEl){
-  if(currentAudio){currentAudio.pause();currentAudio=null;}
-  document.querySelectorAll('.spk.playing').forEach(b=>b.classList.remove('playing'));
-  if(btnEl)btnEl.classList.add('playing');
-  const url='https://translate.google.com/translate_tts?ie=UTF-8&tl=id&client=tw-ob&q='+encodeURIComponent(text);
-  const audio=new Audio(url);currentAudio=audio;audio.playbackRate=0.9;
-  audio.onended=()=>{if(btnEl)btnEl.classList.remove('playing');currentAudio=null;};
-  audio.onerror=()=>{if(btnEl)btnEl.classList.remove('playing');fbSpeak(text);};
-  audio.play().catch(()=>fbSpeak(text));
+// ── 语音引擎：优先 Google TTS，Safari 降级到系统 TTS ──
+let audioUnlocked = false;
+let idVoice = null;
+
+function unlockAudio() {
+  if (audioUnlocked) return;
+  audioUnlocked = true;
+  // 用无声音频解锁 Safari 的自动播放限制
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  const buf = ctx.createBuffer(1, 1, 22050);
+  const src = ctx.createBufferSource();
+  src.buffer = buf; src.connect(ctx.destination); src.start(0);
+  ctx.resume();
+  // 同时预热 speechSynthesis
+  if ('speechSynthesis' in window) {
+    const u = new SpeechSynthesisUtterance('');
+    u.volume = 0; speechSynthesis.speak(u);
+  }
+  document.getElementById('unlock-banner').style.display = 'none';
 }
-function fbSpeak(text){
-  if(!('speechSynthesis'in window))return;
-  const u=new SpeechSynthesisUtterance(text);u.lang='id-ID';u.rate=0.8;
-  const v=speechSynthesis.getVoices().find(v=>v.lang.startsWith('id'));if(v)u.voice=v;
+
+function loadVoices() {
+  if (!('speechSynthesis' in window)) return;
+  const voices = speechSynthesis.getVoices();
+  idVoice = voices.find(v => v.lang === 'id-ID') ||
+            voices.find(v => v.lang.startsWith('id')) ||
+            voices.find(v => v.lang.startsWith('ms')) ||
+            voices.find(v => v.lang.startsWith('en'));
+}
+if ('speechSynthesis' in window) {
+  speechSynthesis.onvoiceschanged = loadVoices;
+  loadVoices();
+}
+
+function speak(text, btnEl) {
+  unlockAudio();
+  document.querySelectorAll('.spk.playing').forEach(b => b.classList.remove('playing'));
+  if (btnEl) btnEl.classList.add('playing');
+  const done = () => { if (btnEl) btnEl.classList.remove('playing'); };
+
+  // 先试 Google TTS
+  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+  const url = 'https://translate.google.com/translate_tts?ie=UTF-8&tl=id&client=tw-ob&q=' + encodeURIComponent(text);
+  const audio = new Audio(url);
+  audio.crossOrigin = 'anonymous';
+  currentAudio = audio;
+  audio.playbackRate = 0.85;
+  audio.onended = () => { currentAudio = null; done(); };
+  audio.onerror = () => { currentAudio = null; sysTTS(text, btnEl); };
+  const p = audio.play();
+  if (p) p.catch(() => { currentAudio = null; sysTTS(text, btnEl); });
+}
+
+function sysTTS(text, btnEl) {
+  if (!('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  if (!idVoice) loadVoices();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = idVoice ? idVoice.lang : 'id-ID';
+  if (idVoice) u.voice = idVoice;
+  u.rate = 0.82; u.pitch = 1.0; u.volume = 1.0;
+  u.onend = () => { if (btnEl) btnEl.classList.remove('playing'); };
+  u.onerror = () => { if (btnEl) btnEl.classList.remove('playing'); };
   speechSynthesis.speak(u);
 }
+
+function fbSpeak(text) { sysTTS(text, null); }
 function mkSpk(text,small){
   const safe=text.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
   return `<button class="spk" style="font-size:${small?'10px':'11px'}" onclick="event.stopPropagation();speak('${safe}',this)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 5.5h2.5L8 2.5v11L4.5 10.5H2z"/><path d="M10 5.5c1.1.6 1.8 1.7 1.8 3s-.7 2.4-1.8 3"/></svg>听</button>`;
 }
 function detectVoice(){
   const p=document.getElementById('vpill'),l=document.getElementById('vlbl');
-  const a=new Audio('https://translate.google.com/translate_tts?ie=UTF-8&tl=id&client=tw-ob&q=halo');
-  a.oncanplay=()=>{p.className='vpill ok';l.textContent='Google印尼语语音·发音准确';};
-  a.onerror=()=>{p.className='vpill warn';l.textContent='网络受限，使用系统备用语音';};
-  a.load();
+  // 检测 Google TTS 可用性
+  fetch('https://translate.google.com/translate_tts?ie=UTF-8&tl=id&client=tw-ob&q=halo', {method:'HEAD', mode:'no-cors'})
+    .then(()=>{p.className='vpill ok';l.textContent='Google印尼语语音·发音准确';})
+    .catch(()=>{p.className='vpill warn';l.textContent='系统印尼语语音';});
+  // 不管结果，先标记为可用
+  setTimeout(()=>{
+    if(!p.classList.contains('ok')&&!p.classList.contains('warn')){
+      p.className='vpill ok';l.textContent='印尼语语音就绪';
+    }
+  },2000);
 }
 function buildGrid(){
   document.getElementById('topic-grid').innerHTML=TOPICS.map((t,i)=>{
