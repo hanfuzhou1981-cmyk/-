@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Belajar Bahasa Indonesia · 印尼语学习</title>
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Belajar">
+<meta name="theme-color" content="#F5F0E8">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F5F0E8;--surface:#FFFDF8;--s2:#F0EBE0;--accent:#C8543A;--green:#2D6A4F;--text:#1A1612;--t2:#6B6255;--t3:#A89F92;--border:rgba(26,22,18,0.1);--r:16px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:0 0 calc(72px + env(safe-area-inset-bottom));-webkit-tap-highlight-color:transparent}
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:16px 20px 12px;position:sticky;top:0;z-index:100}
+.header-row{display:flex;align-items:baseline;gap:8px;margin-bottom:4px}
+.header h1{font-family:'DM Serif Display',serif;font-size:20px}
+.header-sub{font-size:12px;color:var(--t3);font-style:italic}
+.vpill{display:inline-flex;align-items:center;gap:5px;font-size:11px;padding:3px 9px;border-radius:100px;background:var(--s2);color:var(--t2)}
+.vpill.ok{background:#D8EFE6;color:#1A5C3A}.vpill.warn{background:#FDE8D0;color:#7A3A10}
+.vdot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}
+.nav{display:flex;gap:4px;padding:10px 20px;background:var(--bg);border-bottom:1px solid var(--border);overflow-x:auto}
+.nav::-webkit-scrollbar{display:none}
+.nb{flex-shrink:0;padding:6px 14px;border-radius:100px;border:1px solid var(--border);background:transparent;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--t2);cursor:pointer;transition:all .2s;white-space:nowrap}
+.nb.active{background:var(--text);color:var(--bg);border-color:var(--text)}
+.nb:hover:not(.active){background:var(--s2)}
+.screen{display:none;padding:16px 20px}.screen.active{display:block}
+.slbl{font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);margin-bottom:10px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.stat{background:var(--surface);border-radius:12px;border:1px solid var(--border);padding:10px 8px;text-align:center}
+.slbl2{font-size:9px;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);margin-bottom:4px}
+.sval{font-family:'DM Serif Display',serif;font-size:20px;color:var(--text)}
+.tgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.tc{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px;cursor:pointer;transition:all .2s;position:relative}
+.tc:hover{border-color:var(--accent)}.tc.sel{border-color:var(--green);background:#D8EFE6}
+.tc-icon{font-size:20px;margin-bottom:6px}.tc-name{font-size:13px;font-weight:500;color:var(--text)}
+.tc-count{font-size:10px;color:var(--t3);margin-top:2px}.tc-prog{position:absolute;bottom:8px;right:10px;font-size:10px;color:var(--green);font-weight:500}
+.daily-banner{background:var(--text);color:var(--bg);border-radius:var(--r);padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer}
+.db-left h3{font-family:'DM Serif Display',serif;font-size:16px;margin-bottom:2px}.db-left p{font-size:11px;opacity:.7}.db-right{font-size:22px}
+.btn-p{width:100%;padding:13px;border-radius:var(--r);background:var(--text);color:var(--bg);border:none;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:opacity .2s}
+.btn-p:hover{opacity:.85}
+.btn-o{width:100%;padding:11px;border-radius:var(--r);background:transparent;color:var(--t2);border:1px solid var(--border);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;transition:all .2s;margin-top:8px}
+.btn-o:hover{background:var(--s2)}
+.pw{background:var(--s2);border-radius:100px;height:4px;margin-bottom:4px;overflow:hidden}
+.pf{height:100%;border-radius:100px;background:var(--green);transition:width .4s ease}
+.plbl{font-size:11px;color:var(--t3);margin-bottom:14px}
+.fc{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:32px 20px;text-align:center;cursor:pointer;margin-bottom:10px;transition:border-color .2s;min-height:190px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.fc:hover{border-color:var(--accent)}
+.fc-word{font-family:'DM Serif Display',serif;font-size:30px;color:var(--text);margin-bottom:6px}
+.fc-hint{font-size:12px;color:var(--t3)}.fc-zh{font-size:20px;font-weight:500;color:var(--green);margin-top:12px;display:none}
+.fc-pron{font-size:11px;color:var(--t3);margin-top:4px;font-style:italic;display:none}
+.fc-cat{font-size:10px;color:var(--accent);margin-top:6px;display:none;text-transform:uppercase;letter-spacing:.5px}
+.fc.flipped .fc-zh,.fc.flipped .fc-pron,.fc.flipped .fc-cat{display:block}.fc.flipped .fc-hint{display:none}
+.spk{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:100px;border:1px solid var(--border);background:var(--surface);font-family:'DM Sans',sans-serif;font-size:11px;color:var(--t2);cursor:pointer;transition:all .2s;margin-top:8px}
+.spk:hover{border-color:var(--green);color:var(--green)}.spk.playing{border-color:var(--green);color:var(--green);background:#D8EFE6}
+.spk svg{width:12px;height:12px;flex-shrink:0}
+.ca{display:flex;gap:8px;margin-bottom:10px}
+.btn-again{flex:1;padding:11px;border-radius:var(--r);border:1px solid #E8C4BA;background:#FBF0EE;color:#993C1D;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer}
+.btn-know{flex:1;padding:11px;border-radius:var(--r);border:1px solid #A8D8C0;background:#D8EFE6;color:#1A5C3A;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer}
+.qq{font-family:'DM Serif Display',serif;font-size:18px;color:var(--text);margin-bottom:14px;line-height:1.4}
+.qopts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.qopt{padding:12px 8px;border-radius:var(--r);border:1px solid var(--border);background:var(--surface);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--text);text-align:center;transition:all .2s;line-height:1.4}
+.qopt:hover:not(.disabled){border-color:var(--accent);background:var(--s2)}
+.qopt.correct{background:#D8EFE6;border-color:var(--green);color:#1A5C3A}.qopt.wrong{background:#FBF0EE;border-color:var(--accent);color:#7A1A0A}.qopt.disabled{cursor:default}
+.qfb{font-size:12px;color:var(--t2);text-align:center;margin-bottom:10px;min-height:16px}
+.qnxt{width:100%;padding:11px;border-radius:var(--r);background:var(--text);color:var(--bg);border:none;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;display:none}
+.cwrap{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.bub{max-width:82%;padding:10px 12px;border-radius:14px;font-size:13px;line-height:1.5}
+.bub-id{background:var(--surface);border:1px solid var(--border);color:var(--text);align-self:flex-start;border-bottom-left-radius:3px}
+.bub-you{background:var(--text);color:var(--bg);align-self:flex-end;border-bottom-right-radius:3px}
+.bub-trans{font-size:10px;color:var(--t3);margin-top:3px;font-style:italic}
+.copt{width:100%;padding:10px 12px;border-radius:var(--r);border:1px solid var(--border);background:var(--surface);text-align:left;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--text);cursor:pointer;transition:all .2s;margin-bottom:6px}
+.copt:hover{border-color:var(--green)}.copt.picked{background:var(--text);color:var(--bg);border-color:var(--text)}
+.cnote{font-size:11px;color:var(--t2);padding:8px 12px;background:var(--s2);border-radius:var(--r);margin-bottom:8px;border-left:3px solid var(--green)}
+.pcat{font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);margin:14px 0 6px}
+.pitem{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+.ptexts{flex:1}.pid{font-size:14px;font-weight:500;color:var(--text)}.pzh{font-size:11px;color:var(--t3);margin-top:1px}.ppron{font-size:10px;color:var(--green);margin-top:1px;font-style:italic}
+.sw{position:relative;margin-bottom:12px}
+.sw input{width:100%;padding:10px 14px 10px 36px;border-radius:100px;border:1px solid var(--border);background:var(--surface);font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);outline:none}
+.sw input:focus{border-color:var(--green)}.si{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--t3);pointer-events:none}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-row"><h1>Belajar Bahasa</h1><span class="header-sub">500词印尼语</span></div>
+  <div class="vpill" id="vpill"><span class="vdot"></span><span id="vlbl">检测语音...</span></div>
+</div>
+<div class="nav">
+  <button class="nb active" onclick="showScreen('home')">主页</button>
+  <button class="nb" onclick="showScreen('flash')">词汇卡</button>
+  <button class="nb" onclick="showScreen('quiz')">测验</button>
+  <button class="nb" onclick="showScreen('convo')">对话</button>
+  <button class="nb" onclick="showScreen('phrase')">短语本</button>
+</div>
+<div id="screen-home" class="screen active">
+  <div class="stats">
+    <div class="stat"><div class="slbl2">已掌握</div><div class="sval" id="h-known">0</div></div>
+    <div class="stat"><div class="slbl2">正确率</div><div class="sval" id="h-acc">—</div></div>
+    <div class="stat"><div class="slbl2">连续天</div><div class="sval" id="h-streak">0</div></div>
+    <div class="stat"><div class="slbl2">总进度</div><div class="sval" id="h-pct">0%</div></div>
+  </div>
+  <div class="daily-banner" onclick="startDaily()">
+    <div class="db-left"><h3>今日学习</h3><p id="daily-desc">每天10个新词，坚持50天掌握500词</p></div>
+    <div class="db-right">→</div>
+  </div>
+  <div class="slbl">选择主题</div>
+  <div class="tgrid" id="topic-grid"></div>
+  <button class="btn-p" onclick="showScreen('flash')">开始学习所选主题 →</button>
+</div>
+<div id="screen-flash" class="screen">
+  <div class="pw"><div class="pf" id="f-prog" style="width:0%"></div></div>
+  <div class="plbl" id="f-lbl">第 1 / 10 张</div>
+  <div class="fc" id="fc" onclick="flipCard()">
+    <div class="fc-word" id="f-word"></div>
+    <div class="fc-hint">点击翻转</div>
+    <div class="fc-zh" id="f-zh"></div>
+    <div class="fc-pron" id="f-pron"></div>
+    <div class="fc-cat" id="f-cat"></div>
+  </div>
+  <div style="text-align:center">
+    <button class="spk" id="spk-flash" onclick="event.stopPropagation();speakCurrent()">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 5.5h2.5L8 2.5v11L4.5 10.5H2z"/><path d="M10 5.5c1.1.6 1.8 1.7 1.8 3s-.7 2.4-1.8 3"/><path d="M12.5 3c2 1.1 3.3 3.2 3.3 5.5s-1.3 4.4-3.3 5.5"/></svg>听发音
+    </button>
+  </div><br>
+  <div class="ca">
+    <button class="btn-again" onclick="cardResult(false)">再练一次</button>
+    <button class="btn-know" onclick="cardResult(true)">✓ 记住了</button>
+  </div>
+  <button class="btn-o" onclick="showScreen('home')">← 返回</button>
+</div>
+<div id="screen-quiz" class="screen">
+  <div class="pw"><div class="pf" id="q-prog" style="width:0%"></div></div>
+  <div class="plbl" id="q-lbl">第 1 / 10 题</div>
+  <div class="qq" id="q-q"></div>
+  <div id="q-listen" style="margin-bottom:10px"></div>
+  <div class="qopts" id="q-opts"></div>
+  <div class="qfb" id="q-fb"></div>
+  <button class="qnxt" id="q-nxt" onclick="nextQuiz()">下一题 →</button>
+</div>
+<div id="screen-convo" class="screen">
+  <div class="slbl">情景对话</div>
+  <div id="convo-sel" style="margin-bottom:12px"></div>
+  <div class="cwrap" id="cwrap"></div>
+  <div id="copts"></div>
+  <div id="cnote"></div>
+</div>
+<div id="screen-phrase" class="screen">
+  <div class="sw">
+    <svg class="si" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg>
+    <input type="text" placeholder="搜索印尼语或中文..." oninput="searchPhrase(this.value)">
+  </div>
+  <div id="phrase-list"></div>
+</div>
+<script>
+
+const TOPICS=[
+{name:'问候社交',icon:'👋',words:[
+{id:'Halo',zh:'你好',pron:'ha-lo'},{id:'Hai',zh:'嗨',pron:'hai'},{id:'Selamat pagi',zh:'早上好',pron:'se-la-mat pa-gi'},{id:'Selamat siang',zh:'中午好',pron:'se-la-mat si-ang'},{id:'Selamat sore',zh:'下午好',pron:'se-la-mat so-re'},{id:'Selamat malam',zh:'晚上好',pron:'se-la-mat ma-lam'},{id:'Selamat tidur',zh:'晚安',pron:'se-la-mat ti-dur'},{id:'Apa kabar',zh:'你好吗',pron:'a-pa ka-bar'},{id:'Baik',zh:'好不错',pron:'ba-ik'},{id:'Baik sekali',zh:'非常好',pron:'ba-ik se-ka-li'},
+{id:'Lumayan',zh:'还好马马虎虎',pron:'lu-ma-yan'},{id:'Tidak baik',zh:'不好',pron:'ti-dak ba-ik'},{id:'Terima kasih',zh:'谢谢',pron:'te-ri-ma ka-sih'},{id:'Sama-sama',zh:'不客气',pron:'sa-ma sa-ma'},{id:'Makasih',zh:'谢谢口语',pron:'ma-ka-sih'},{id:'Terima kasih banyak',zh:'非常感谢',pron:'te-ri-ma ka-sih ba-nyak'},{id:'Maaf',zh:'对不起',pron:'ma-af'},{id:'Tidak apa-apa',zh:'没关系',pron:'ti-dak a-pa a-pa'},{id:'Permisi',zh:'打扰一下借过',pron:'per-mi-si'},{id:'Tolong',zh:'请帮帮我',pron:'to-long'},
+{id:'Sampai jumpa',zh:'再见',pron:'sam-pai jum-pa'},{id:'Sampai nanti',zh:'待会见',pron:'sam-pai nan-ti'},{id:'Dadah',zh:'拜拜口语',pron:'da-dah'},{id:'Nama saya',zh:'我叫',pron:'na-ma sa-ya'},{id:'Siapa nama kamu',zh:'你叫什么名字',pron:'si-a-pa na-ma ka-mu'},{id:'Senang bertemu',zh:'很高兴认识你',pron:'se-nang ber-te-mu'},{id:'Dari mana',zh:'从哪里来',pron:'da-ri ma-na'},{id:'Saya dari',zh:'我来自',pron:'sa-ya da-ri'},{id:'Tinggal di mana',zh:'住在哪里',pron:'ting-gal di ma-na'},{id:'Umur berapa',zh:'多大年纪',pron:'u-mur be-ra-pa'},
+{id:'Kerja apa',zh:'做什么工作',pron:'ker-ja a-pa'},{id:'Sudah menikah',zh:'结婚了吗',pron:'su-dah me-ni-kah'},{id:'Punya anak',zh:'有孩子吗',pron:'pu-nya a-nak'},{id:'Saya senang',zh:'我很高兴',pron:'sa-ya se-nang'},{id:'Saya sedih',zh:'我很伤心',pron:'sa-ya se-dih'},{id:'Saya rindu',zh:'我想念',pron:'sa-ya rin-du'},{id:'Selamat',zh:'恭喜',pron:'se-la-mat'},{id:'Selamat ulang tahun',zh:'生日快乐',pron:'se-la-mat u-lang ta-hun'},{id:'Semoga sukses',zh:'祝你成功',pron:'se-mo-ga suk-ses'},{id:'Hati-hati',zh:'小心保重',pron:'ha-ti ha-ti'},
+{id:'Jaga diri',zh:'好好照顾自己',pron:'ja-ga di-ri'},{id:'Salam',zh:'问好致意',pron:'sa-lam'},{id:'Titip salam',zh:'代我问好',pron:'ti-tip sa-lam'},{id:'Gimana kabarnya',zh:'近况如何口语',pron:'gi-ma-na ka-bar-nya'},{id:'Lama tidak bertemu',zh:'好久不见',pron:'la-ma ti-dak ber-te-mu'},{id:'Ayo',zh:'走吧来吧',pron:'a-yo'},{id:'Yuk',zh:'走咯口语',pron:'yuk'},{id:'Boleh',zh:'可以好的',pron:'bo-leh'},{id:'Tidak boleh',zh:'不可以',pron:'ti-dak bo-leh'},{id:'Silakan',zh:'请邀请',pron:'si-la-kan'},
+]},
+{name:'数字时间',icon:'🔢',words:[
+{id:'Nol',zh:'零',pron:'nol'},{id:'Satu',zh:'一',pron:'sa-tu'},{id:'Dua',zh:'二',pron:'du-a'},{id:'Tiga',zh:'三',pron:'ti-ga'},{id:'Empat',zh:'四',pron:'em-pat'},{id:'Lima',zh:'五',pron:'li-ma'},{id:'Enam',zh:'六',pron:'e-nam'},{id:'Tujuh',zh:'七',pron:'tu-juh'},{id:'Delapan',zh:'八',pron:'de-la-pan'},{id:'Sembilan',zh:'九',pron:'sem-bi-lan'},
+{id:'Sepuluh',zh:'十',pron:'se-pu-luh'},{id:'Sebelas',zh:'十一',pron:'se-be-las'},{id:'Dua belas',zh:'十二',pron:'du-a be-las'},{id:'Dua puluh',zh:'二十',pron:'du-a pu-luh'},{id:'Seratus',zh:'一百',pron:'se-ra-tus'},{id:'Seribu',zh:'一千',pron:'se-ri-bu'},{id:'Satu juta',zh:'一百万',pron:'sa-tu ju-ta'},{id:'Pertama',zh:'第一',pron:'per-ta-ma'},{id:'Kedua',zh:'第二',pron:'ke-du-a'},{id:'Ketiga',zh:'第三',pron:'ke-ti-ga'},
+{id:'Jam berapa',zh:'几点了',pron:'jam be-ra-pa'},{id:'Jam satu',zh:'一点钟',pron:'jam sa-tu'},{id:'Setengah',zh:'半点半',pron:'se-te-ngah'},{id:'Pagi',zh:'早上',pron:'pa-gi'},{id:'Siang',zh:'中午白天',pron:'si-ang'},{id:'Sore',zh:'下午',pron:'so-re'},{id:'Malam',zh:'晚上',pron:'ma-lam'},{id:'Tengah malam',zh:'午夜',pron:'te-ngah ma-lam'},{id:'Hari ini',zh:'今天',pron:'ha-ri i-ni'},{id:'Kemarin',zh:'昨天',pron:'ke-ma-rin'},
+{id:'Besok',zh:'明天',pron:'be-sok'},{id:'Lusa',zh:'后天',pron:'lu-sa'},{id:'Minggu ini',zh:'本周',pron:'ming-gu i-ni'},{id:'Bulan ini',zh:'本月',pron:'bu-lan i-ni'},{id:'Tahun ini',zh:'今年',pron:'ta-hun i-ni'},{id:'Senin',zh:'星期一',pron:'se-nin'},{id:'Selasa',zh:'星期二',pron:'se-la-sa'},{id:'Rabu',zh:'星期三',pron:'ra-bu'},{id:'Kamis',zh:'星期四',pron:'ka-mis'},{id:'Jumat',zh:'星期五',pron:'ju-mat'},
+{id:'Sabtu',zh:'星期六',pron:'sab-tu'},{id:'Minggu',zh:'星期日',pron:'ming-gu'},{id:'Januari',zh:'一月',pron:'ja-nu-a-ri'},{id:'Maret',zh:'三月',pron:'ma-ret'},{id:'Juli',zh:'七月',pron:'ju-li'},{id:'Desember',zh:'十二月',pron:'de-sem-ber'},{id:'Sekarang',zh:'现在',pron:'se-ka-rang'},{id:'Nanti',zh:'待会儿',pron:'nan-ti'},{id:'Tadi',zh:'刚才',pron:'ta-di'},{id:'Lama',zh:'很久慢',pron:'la-ma'},
+]},
+{name:'购物消费',icon:'🛒',words:[
+{id:'Berapa harganya',zh:'多少钱',pron:'be-ra-pa har-ga-nya'},{id:'Berapa ini',zh:'这个多少钱',pron:'be-ra-pa i-ni'},{id:'Mahal',zh:'贵',pron:'ma-hal'},{id:'Mahal sekali',zh:'太贵了',pron:'ma-hal se-ka-li'},{id:'Murah',zh:'便宜',pron:'mu-rah'},{id:'Bisa kurang',zh:'能便宜点吗',pron:'bi-sa ku-rang'},{id:'Harga pas',zh:'固定价格不还价',pron:'har-ga pas'},{id:'Diskon',zh:'折扣',pron:'dis-kon'},{id:'Ada promo',zh:'有促销吗',pron:'a-da pro-mo'},{id:'Gratis',zh:'免费',pron:'gra-tis'},
+{id:'Saya mau ini',zh:'我要这个',pron:'sa-ya mau i-ni'},{id:'Saya tidak mau',zh:'我不要',pron:'sa-ya ti-dak mau'},{id:'Ada yang lebih murah',zh:'有更便宜的吗',pron:'a-da yang le-bih mu-rah'},{id:'Ada ukuran lain',zh:'有其他尺寸吗',pron:'a-da u-ku-ran la-in'},{id:'Ada warna lain',zh:'有其他颜色吗',pron:'a-da war-na la-in'},{id:'Boleh saya coba',zh:'可以试穿吗',pron:'bo-leh sa-ya co-ba'},{id:'Pas',zh:'合适正好',pron:'pas'},{id:'Tidak pas',zh:'不合适',pron:'ti-dak pas'},{id:'Terlalu besar',zh:'太大了',pron:'ter-la-lu be-sar'},{id:'Terlalu kecil',zh:'太小了',pron:'ter-la-lu ke-cil'},
+{id:'Kasir',zh:'收银台',pron:'ka-sir'},{id:'Bayar',zh:'付钱',pron:'ba-yar'},{id:'Bayar tunai',zh:'付现金',pron:'ba-yar tu-nai'},{id:'Bayar pakai kartu',zh:'刷卡',pron:'ba-yar pa-kai kar-tu'},{id:'Transfer',zh:'转账',pron:'trans-fer'},{id:'Kembalian',zh:'找零',pron:'kem-ba-li-an'},{id:'Struk',zh:'收据',pron:'struk'},{id:'Tas',zh:'袋子包',pron:'tas'},{id:'Plastik',zh:'塑料袋',pron:'plas-tik'},{id:'Bungkus',zh:'打包包装',pron:'bung-kus'},
+{id:'Toko',zh:'商店',pron:'to-ko'},{id:'Pasar',zh:'市场',pron:'pa-sar'},{id:'Mall',zh:'购物中心',pron:'mol'},{id:'Online',zh:'网购',pron:'on-lain'},{id:'Dikirim',zh:'送货',pron:'di-ki-rim'},{id:'Pesan',zh:'订购预订',pron:'pe-san'},{id:'Stok habis',zh:'断货了',pron:'stok ha-bis'},{id:'Masih ada',zh:'还有货',pron:'ma-sih a-da'},{id:'Kualitas bagus',zh:'质量好',pron:'ku-a-li-tas ba-gus'},{id:'Rusak',zh:'坏了损坏',pron:'ru-sak'},
+{id:'Tukar',zh:'换货',pron:'tu-kar'},{id:'Kembali uang',zh:'退款',pron:'kem-ba-li u-ang'},{id:'Belanja',zh:'购物',pron:'be-lan-ja'},{id:'Harga total',zh:'总价',pron:'har-ga to-tal'},{id:'Diskon berapa persen',zh:'打几折',pron:'dis-kon be-ra-pa per-sen'},{id:'Asli',zh:'正品真货',pron:'as-li'},{id:'Palsu',zh:'假货',pron:'pal-su'},{id:'Garansi',zh:'保修保证',pron:'ga-ran-si'},{id:'Cuci mata',zh:'随便逛逛',pron:'cu-ci ma-ta'},{id:'Beli',zh:'买',pron:'be-li'},
+]},
+{name:'餐饮食物',icon:'🍜',words:[
+{id:'Nasi',zh:'饭米饭',pron:'na-si'},{id:'Nasi goreng',zh:'炒饭',pron:'na-si go-reng'},{id:'Nasi putih',zh:'白米饭',pron:'na-si pu-tih'},{id:'Mie',zh:'面条',pron:'mi-e'},{id:'Mie goreng',zh:'炒面',pron:'mi-e go-reng'},{id:'Mie ayam',zh:'鸡肉面',pron:'mi-e a-yam'},{id:'Sate',zh:'沙爹烤串',pron:'sa-te'},{id:'Sate ayam',zh:'鸡肉沙爹',pron:'sa-te a-yam'},{id:'Rendang',zh:'仁当牛肉咖喱',pron:'ren-dang'},{id:'Gado-gado',zh:'加多加多蔬菜花生酱',pron:'ga-do ga-do'},
+{id:'Soto',zh:'索托肉汤',pron:'so-to'},{id:'Bakso',zh:'肉丸汤',pron:'bak-so'},{id:'Ayam goreng',zh:'炸鸡',pron:'a-yam go-reng'},{id:'Ikan',zh:'鱼',pron:'i-kan'},{id:'Udang',zh:'虾',pron:'u-dang'},{id:'Tahu',zh:'豆腐',pron:'ta-hu'},{id:'Tempe',zh:'丹贝发酵大豆',pron:'tem-pe'},{id:'Sayur',zh:'蔬菜',pron:'sa-yur'},{id:'Buah',zh:'水果',pron:'bu-ah'},{id:'Pisang',zh:'香蕉',pron:'pi-sang'},
+{id:'Mangga',zh:'芒果',pron:'mang-ga'},{id:'Jeruk',zh:'橙子柑橘',pron:'je-ruk'},{id:'Durian',zh:'榴莲',pron:'du-ri-an'},{id:'Nasi padang',zh:'巴东饭',pron:'na-si pa-dang'},{id:'Pecel lele',zh:'炸鲶鱼饭',pron:'pe-cel le-le'},{id:'Es teh',zh:'冰红茶',pron:'es teh'},{id:'Es teh manis',zh:'甜冰红茶',pron:'es teh ma-nis'},{id:'Kopi',zh:'咖啡',pron:'ko-pi'},{id:'Kopi susu',zh:'拿铁牛奶咖啡',pron:'ko-pi su-su'},{id:'Jus',zh:'果汁',pron:'jus'},
+{id:'Air putih',zh:'白开水',pron:'a-ir pu-tih'},{id:'Teh',zh:'茶',pron:'teh'},{id:'Susu',zh:'牛奶',pron:'su-su'},{id:'Enak',zh:'好吃好喝',pron:'e-nak'},{id:'Enak banget',zh:'太好吃了',pron:'e-nak ba-nget'},{id:'Tidak enak',zh:'不好吃',pron:'ti-dak e-nak'},{id:'Pedas',zh:'辣',pron:'pe-das'},{id:'Tidak pedas',zh:'不辣',pron:'ti-dak pe-das'},{id:'Manis',zh:'甜',pron:'ma-nis'},{id:'Asin',zh:'咸',pron:'a-sin'},
+{id:'Asam',zh:'酸',pron:'a-sam'},{id:'Pahit',zh:'苦',pron:'pa-hit'},{id:'Gurih',zh:'鲜香浓郁',pron:'gu-rih'},{id:'Minta menunya',zh:'请给我菜单',pron:'min-ta me-nu-nya'},{id:'Pesan',zh:'点餐预订',pron:'pe-san'},{id:'Makan di sini',zh:'在这里吃',pron:'ma-kan di si-ni'},{id:'Bungkus',zh:'打包带走',pron:'bung-kus'},{id:'Minta tambah',zh:'再来一份',pron:'min-ta tam-bah'},{id:'Kenyang',zh:'吃饱了',pron:'ke-nyang'},{id:'Lapar',zh:'饿',pron:'la-par'},
+]},
+{name:'交通出行',icon:'🚗',words:[
+{id:'Jalan',zh:'路走路',pron:'ja-lan'},{id:'Jalan kaki',zh:'步行',pron:'ja-lan ka-ki'},{id:'Naik',zh:'乘坐上车',pron:'na-ik'},{id:'Turun',zh:'下车',pron:'tu-run'},{id:'Motor',zh:'摩托车',pron:'mo-tor'},{id:'Ojek',zh:'摩托车出租',pron:'o-jek'},{id:'Ojek online',zh:'网约摩托车',pron:'o-jek on-lain'},{id:'Mobil',zh:'汽车',pron:'mo-bil'},{id:'Taksi',zh:'出租车',pron:'tak-si'},{id:'Bus',zh:'公共汽车',pron:'bus'},
+{id:'Angkot',zh:'小型公共汽车',pron:'ang-kot'},{id:'Kereta',zh:'火车',pron:'ke-re-ta'},{id:'Pesawat',zh:'飞机',pron:'pe-sa-wat'},{id:'Kapal',zh:'船',pron:'ka-pal'},{id:'Bandara',zh:'机场',pron:'ban-da-ra'},{id:'Stasiun',zh:'火车站',pron:'sta-si-un'},{id:'Terminal',zh:'汽车站',pron:'ter-mi-nal'},{id:'Halte',zh:'公交站',pron:'hal-te'},{id:'Di mana',zh:'在哪里',pron:'di ma-na'},{id:'Di sini',zh:'在这里',pron:'di si-ni'},
+{id:'Di sana',zh:'在那里',pron:'di sa-na'},{id:'Belok kiri',zh:'左转',pron:'be-lok ki-ri'},{id:'Belok kanan',zh:'右转',pron:'be-lok ka-nan'},{id:'Lurus',zh:'直走',pron:'lu-rus'},{id:'Putar balik',zh:'掉头',pron:'pu-tar ba-lik'},{id:'Dekat',zh:'近',pron:'de-kat'},{id:'Jauh',zh:'远',pron:'ja-uh'},{id:'Berapa lama',zh:'要多久',pron:'be-ra-pa la-ma'},{id:'Berapa kilometer',zh:'多少公里',pron:'be-ra-pa ki-lo-me-ter'},{id:'Macet',zh:'堵车',pron:'ma-cet'},
+{id:'Parkir',zh:'停车',pron:'par-kir'},{id:'Bensin',zh:'汽油',pron:'ben-sin'},{id:'Isi bensin',zh:'加油',pron:'i-si ben-sin'},{id:'GPS',zh:'导航',pron:'je-pe-es'},{id:'Peta',zh:'地图',pron:'pe-ta'},{id:'Alamat',zh:'地址',pron:'a-la-mat'},{id:'Hotel',zh:'酒店',pron:'ho-tel'},{id:'Penginapan',zh:'住宿',pron:'peng-i-na-pan'},{id:'Check in',zh:'入住',pron:'chek in'},{id:'Check out',zh:'退房',pron:'chek aut'},
+{id:'Kamar',zh:'房间',pron:'ka-mar'},{id:'Kunci',zh:'钥匙',pron:'kun-ci'},{id:'Lift',zh:'电梯',pron:'lift'},{id:'Lantai',zh:'楼层',pron:'lan-tai'},{id:'Resepsi',zh:'前台',pron:'re-sep-si'},{id:'Wisata',zh:'旅游观光',pron:'wi-sa-ta'},{id:'Pantai',zh:'海滩',pron:'pan-tai'},{id:'Gunung',zh:'山',pron:'gu-nung'},{id:'Tiket',zh:'票',pron:'ti-ket'},{id:'Masuk',zh:'进入',pron:'ma-suk'},
+]},
+{name:'身体健康',icon:'❤️',words:[
+{id:'Sehat',zh:'健康',pron:'se-hat'},{id:'Sakit',zh:'生病痛',pron:'sa-kit'},{id:'Sakit kepala',zh:'头痛',pron:'sa-kit ke-pa-la'},{id:'Sakit perut',zh:'肚子痛',pron:'sa-kit pe-rut'},{id:'Demam',zh:'发烧',pron:'de-mam'},{id:'Batuk',zh:'咳嗽',pron:'ba-tuk'},{id:'Pilek',zh:'流鼻涕感冒',pron:'pi-lek'},{id:'Flu',zh:'流感',pron:'flu'},{id:'Mual',zh:'恶心想吐',pron:'mu-al'},{id:'Pusing',zh:'头晕',pron:'pu-sing'},
+{id:'Lelah',zh:'疲惫累',pron:'le-lah'},{id:'Alergi',zh:'过敏',pron:'a-ler-gi'},{id:'Luka',zh:'伤口受伤',pron:'lu-ka'},{id:'Dokter',zh:'医生',pron:'dok-ter'},{id:'Rumah sakit',zh:'医院',pron:'ru-mah sa-kit'},{id:'Klinik',zh:'诊所',pron:'kli-nik'},{id:'Apotek',zh:'药店',pron:'a-po-tek'},{id:'Obat',zh:'药',pron:'o-bat'},{id:'Resep',zh:'处方',pron:'re-sep'},{id:'Vitamin',zh:'维生素',pron:'vi-ta-min'},
+{id:'Kepala',zh:'头',pron:'ke-pa-la'},{id:'Mata',zh:'眼睛',pron:'ma-ta'},{id:'Telinga',zh:'耳朵',pron:'te-li-nga'},{id:'Hidung',zh:'鼻子',pron:'hi-dung'},{id:'Mulut',zh:'嘴巴',pron:'mu-lut'},{id:'Gigi',zh:'牙齿',pron:'gi-gi'},{id:'Lidah',zh:'舌头',pron:'li-dah'},{id:'Leher',zh:'脖子',pron:'le-her'},{id:'Bahu',zh:'肩膀',pron:'ba-hu'},{id:'Tangan',zh:'手',pron:'ta-ngan'},
+{id:'Jari',zh:'手指',pron:'ja-ri'},{id:'Kaki',zh:'脚腿',pron:'ka-ki'},{id:'Perut',zh:'肚子胃',pron:'pe-rut'},{id:'Punggung',zh:'背部',pron:'pung-gung'},{id:'Jantung',zh:'心脏',pron:'jan-tung'},{id:'Paru-paru',zh:'肺',pron:'pa-ru pa-ru'},{id:'Darah',zh:'血',pron:'da-rah'},{id:'Tidur',zh:'睡觉',pron:'ti-dur'},{id:'Istirahat',zh:'休息',pron:'is-ti-ra-hat'},{id:'Olahraga',zh:'运动锻炼',pron:'o-lah-ra-ga'},
+{id:'Makan teratur',zh:'规律饮食',pron:'ma-kan te-ra-tur'},{id:'Minum air',zh:'喝水',pron:'mi-num a-ir'},{id:'Cuci tangan',zh:'洗手',pron:'cu-ci ta-ngan'},{id:'Masker',zh:'口罩',pron:'mas-ker'},{id:'Vaksin',zh:'疫苗',pron:'vak-sin'},{id:'Periksa',zh:'检查就诊',pron:'pe-rik-sa'},{id:'Suntik',zh:'注射打针',pron:'sun-tik'},{id:'Tensi',zh:'血压',pron:'ten-si'},{id:'Gula darah',zh:'血糖',pron:'gu-la da-rah'},{id:'Berat badan',zh:'体重',pron:'be-rat ba-dan'},
+]},
+{name:'家庭关系',icon:'👨‍👩‍👧',words:[
+{id:'Keluarga',zh:'家庭',pron:'ke-lu-ar-ga'},{id:'Ayah',zh:'父亲',pron:'a-yah'},{id:'Ibu',zh:'母亲',pron:'i-bu'},{id:'Orang tua',zh:'父母',pron:'o-rang tu-a'},{id:'Suami',zh:'丈夫',pron:'su-a-mi'},{id:'Istri',zh:'妻子',pron:'is-tri'},{id:'Anak',zh:'孩子',pron:'a-nak'},{id:'Anak laki-laki',zh:'儿子',pron:'a-nak la-ki la-ki'},{id:'Anak perempuan',zh:'女儿',pron:'a-nak pe-rem-pu-an'},{id:'Kakak',zh:'哥哥或姐姐',pron:'ka-kak'},
+{id:'Adik',zh:'弟弟或妹妹',pron:'a-dik'},{id:'Nenek',zh:'奶奶外婆',pron:'ne-nek'},{id:'Kakek',zh:'爷爷外公',pron:'ka-kek'},{id:'Paman',zh:'叔叔舅舅',pron:'pa-man'},{id:'Bibi',zh:'阿姨婶婶',pron:'bi-bi'},{id:'Sepupu',zh:'表兄弟姐妹',pron:'se-pu-pu'},{id:'Keponakan',zh:'侄子侄女',pron:'ke-po-na-kan'},{id:'Mertua',zh:'公公婆婆岳父母',pron:'mer-tu-a'},{id:'Menantu',zh:'女婿儿媳',pron:'me-nan-tu'},{id:'Ipar',zh:'姻亲',pron:'i-par'},
+{id:'Teman',zh:'朋友',pron:'te-man'},{id:'Sahabat',zh:'好朋友挚友',pron:'sa-ha-bat'},{id:'Tetangga',zh:'邻居',pron:'te-tang-ga'},{id:'Pacar',zh:'男女朋友',pron:'pa-car'},{id:'Tunangan',zh:'未婚夫妻',pron:'tu-na-ngan'},{id:'Menikah',zh:'结婚',pron:'me-ni-kah'},{id:'Bercerai',zh:'离婚',pron:'ber-ce-rai'},{id:'Rumah',zh:'房子家',pron:'ru-mah'},{id:'Kamar tidur',zh:'卧室',pron:'ka-mar ti-dur'},{id:'Dapur',zh:'厨房',pron:'da-pur'},
+{id:'Kamar mandi',zh:'浴室卫生间',pron:'ka-mar man-di'},{id:'Ruang tamu',zh:'客厅',pron:'ru-ang ta-mu'},{id:'Meja',zh:'桌子',pron:'me-ja'},{id:'Kursi',zh:'椅子',pron:'kur-si'},{id:'Tempat tidur',zh:'床',pron:'tem-pat ti-dur'},{id:'Lemari',zh:'衣柜橱柜',pron:'le-ma-ri'},{id:'Masak',zh:'做饭烹饪',pron:'ma-sak'},{id:'Bersih',zh:'干净',pron:'ber-sih'},{id:'Kotor',zh:'脏',pron:'ko-tor'},{id:'Cuci piring',zh:'洗碗',pron:'cu-ci pi-ring'},
+{id:'Cuci baju',zh:'洗衣服',pron:'cu-ci ba-ju'},{id:'Sapu',zh:'扫地扫帚',pron:'sa-pu'},{id:'Pel',zh:'拖地',pron:'pel'},{id:'Pindah rumah',zh:'搬家',pron:'pin-dah ru-mah'},{id:'Kontrak',zh:'租房合同',pron:'kon-trak'},{id:'Tetangga baik',zh:'好邻居',pron:'te-tang-ga ba-ik'},{id:'Kumpul keluarga',zh:'家庭聚会',pron:'kum-pul ke-lu-ar-ga'},{id:'Liburan',zh:'假期',pron:'li-bu-ran'},{id:'Mudik',zh:'回乡探亲',pron:'mu-dik'},{id:'Lebaran',zh:'开斋节',pron:'le-ba-ran'},
+]},
+{name:'工作职场',icon:'💼',words:[
+{id:'Kerja',zh:'工作',pron:'ker-ja'},{id:'Kantor',zh:'办公室',pron:'kan-tor'},{id:'Perusahaan',zh:'公司',pron:'pe-ru-sa-ha-an'},{id:'Bos',zh:'老板',pron:'bos'},{id:'Karyawan',zh:'员工',pron:'kar-ya-wan'},{id:'Rekan kerja',zh:'同事',pron:'re-kan ker-ja'},{id:'Rapat',zh:'会议',pron:'ra-pat'},{id:'Presentasi',zh:'演示汇报',pron:'pre-sen-ta-si'},{id:'Proyek',zh:'项目',pron:'pro-yek'},{id:'Deadline',zh:'截止日期',pron:'ded-lain'},
+{id:'Gaji',zh:'工资薪水',pron:'ga-ji'},{id:'Bonus',zh:'奖金',pron:'bo-nus'},{id:'Promosi',zh:'晋升',pron:'pro-mo-si'},{id:'Resign',zh:'辞职',pron:'re-zain'},{id:'Wawancara',zh:'面试采访',pron:'wa-wan-ca-ra'},{id:'Melamar',zh:'申请求职',pron:'me-la-mar'},{id:'CV',zh:'简历',pron:'se-ve'},{id:'Email',zh:'邮件',pron:'i-mel'},{id:'Telepon',zh:'打电话',pron:'te-le-pon'},{id:'Rapat online',zh:'线上会议',pron:'ra-pat on-lain'},
+{id:'Lembur',zh:'加班',pron:'lem-bur'},{id:'Cuti',zh:'休假请假',pron:'cu-ti'},{id:'Izin',zh:'请假许可',pron:'i-zin'},{id:'Terlambat',zh:'迟到',pron:'ter-lam-bat'},{id:'Pulang',zh:'回家下班',pron:'pu-lang'},{id:'Bisnis',zh:'生意商业',pron:'bis-nis'},{id:'Pelanggan',zh:'客户顾客',pron:'pe-lang-gan'},{id:'Invoice',zh:'发票',pron:'in-vois'},{id:'Laporan',zh:'报告',pron:'la-po-ran'},{id:'Target',zh:'目标指标',pron:'tar-get'},
+{id:'Omzet',zh:'营业额',pron:'om-zet'},{id:'Untung',zh:'利润赚到了',pron:'un-tung'},{id:'Rugi',zh:'亏损',pron:'ru-gi'},{id:'Anggaran',zh:'预算',pron:'ang-ga-ran'},{id:'Pajak',zh:'税',pron:'pa-jak'},{id:'Bank',zh:'银行',pron:'bank'},{id:'Tabungan',zh:'储蓄存款',pron:'ta-bung-an'},{id:'Pinjaman',zh:'贷款借款',pron:'pin-ja-man'},{id:'Investasi',zh:'投资',pron:'in-ves-ta-si'},{id:'Strategi',zh:'策略战略',pron:'stra-te-gi'},
+{id:'Inovasi',zh:'创新',pron:'i-no-va-si'},{id:'Kompetitor',zh:'竞争对手',pron:'kom-pe-ti-tor'},{id:'Pasar',zh:'市场',pron:'pa-sar'},{id:'Produk',zh:'产品',pron:'pro-duk'},{id:'Layanan',zh:'服务',pron:'la-ya-nan'},{id:'Kualitas',zh:'质量',pron:'ku-a-li-tas'},{id:'Feedback',zh:'反馈',pron:'fid-bek'},{id:'Evaluasi',zh:'评估',pron:'e-va-lu-a-si'},{id:'Kontrak kerja',zh:'劳动合同',pron:'kon-trak ker-ja'},{id:'Wfh',zh:'居家办公',pron:'work from home'},
+]},
+{name:'自然天气',icon:'🌤️',words:[
+{id:'Cuaca',zh:'天气',pron:'cu-a-ca'},{id:'Panas',zh:'热',pron:'pa-nas'},{id:'Dingin',zh:'冷',pron:'di-ngin'},{id:'Sejuk',zh:'凉爽',pron:'se-juk'},{id:'Hujan',zh:'雨下雨',pron:'hu-jan'},{id:'Hujan lebat',zh:'大雨',pron:'hu-jan le-bat'},{id:'Gerimis',zh:'毛毛雨',pron:'ge-ri-mis'},{id:'Cerah',zh:'晴天',pron:'ce-rah'},{id:'Berawan',zh:'多云',pron:'be-ra-wan'},{id:'Mendung',zh:'阴天乌云密布',pron:'men-dung'},
+{id:'Angin',zh:'风',pron:'a-ngin'},{id:'Angin kencang',zh:'大风',pron:'a-ngin ken-cang'},{id:'Badai',zh:'暴风雨',pron:'ba-dai'},{id:'Petir',zh:'闪电打雷',pron:'pe-tir'},{id:'Banjir',zh:'洪水',pron:'ban-jir'},{id:'Kemarau',zh:'旱季',pron:'ke-ma-rau'},{id:'Musim hujan',zh:'雨季',pron:'mu-sim hu-jan'},{id:'Lembab',zh:'潮湿',pron:'lem-bab'},{id:'Kering',zh:'干燥',pron:'ke-ring'},{id:'Matahari',zh:'太阳',pron:'ma-ta-ha-ri'},
+{id:'Bulan',zh:'月亮',pron:'bu-lan'},{id:'Bintang',zh:'星星',pron:'bin-tang'},{id:'Langit',zh:'天空',pron:'la-ngit'},{id:'Awan',zh:'云',pron:'a-wan'},{id:'Pelangi',zh:'彩虹',pron:'pe-la-ngi'},{id:'Laut',zh:'海洋',pron:'la-ut'},{id:'Pantai',zh:'海滩',pron:'pan-tai'},{id:'Gunung',zh:'山',pron:'gu-nung'},{id:'Sungai',zh:'河流',pron:'su-ngai'},{id:'Danau',zh:'湖',pron:'da-nau'},
+{id:'Hutan',zh:'森林',pron:'hu-tan'},{id:'Sawah',zh:'稻田',pron:'sa-wah'},{id:'Kebun',zh:'花园果园',pron:'ke-bun'},{id:'Pohon',zh:'树',pron:'po-hon'},{id:'Bunga',zh:'花',pron:'bu-nga'},{id:'Rumput',zh:'草',pron:'rum-put'},{id:'Tanah',zh:'土地',pron:'ta-nah'},{id:'Batu',zh:'石头',pron:'ba-tu'},{id:'Air',zh:'水',pron:'a-ir'},{id:'Api',zh:'火',pron:'a-pi'},
+{id:'Udara',zh:'空气',pron:'u-da-ra'},{id:'Polusi',zh:'污染',pron:'po-lu-si'},{id:'Lingkungan',zh:'环境',pron:'ling-kung-an'},{id:'Alam',zh:'自然',pron:'a-lam'},{id:'Gempa',zh:'地震',pron:'gem-pa'},{id:'Gunung berapi',zh:'火山',pron:'gu-nung be-ra-pi'},{id:'Tsunami',zh:'海啸',pron:'tsu-na-mi'},{id:'Suhu',zh:'温度',pron:'su-hu'},{id:'Derajat',zh:'度温度单位',pron:'de-ra-jat'},{id:'Prakiraan cuaca',zh:'天气预报',pron:'pra-ki-ra-an cu-a-ca'},
+]},
+{name:'情感表达',icon:'💬',words:[
+{id:'Suka',zh:'喜欢',pron:'su-ka'},{id:'Tidak suka',zh:'不喜欢',pron:'ti-dak su-ka'},{id:'Cinta',zh:'爱',pron:'cin-ta'},{id:'Sayang',zh:'疼爱亲爱的',pron:'sa-yang'},{id:'Benci',zh:'恨',pron:'ben-ci'},{id:'Marah',zh:'生气',pron:'ma-rah'},{id:'Sedih',zh:'伤心',pron:'se-dih'},{id:'Senang',zh:'高兴开心',pron:'se-nang'},{id:'Bahagia',zh:'幸福快乐',pron:'ba-ha-gi-a'},{id:'Takut',zh:'害怕',pron:'ta-kut'},
+{id:'Khawatir',zh:'担心',pron:'kha-wa-tir'},{id:'Kaget',zh:'惊讶吓一跳',pron:'ka-get'},{id:'Bingung',zh:'困惑迷茫',pron:'bi-ngung'},{id:'Malu',zh:'害羞尴尬',pron:'ma-lu'},{id:'Bangga',zh:'骄傲自豪',pron:'bang-ga'},{id:'Kecewa',zh:'失望',pron:'ke-ce-wa'},{id:'Lega',zh:'如释重负',pron:'le-ga'},{id:'Bosan',zh:'无聊厌倦',pron:'bo-san'},{id:'Penasaran',zh:'好奇疑惑',pron:'pe-na-sa-ran'},{id:'Semangat',zh:'有劲加油',pron:'se-ma-ngat'},
+{id:'Capek',zh:'累疲惫口语',pron:'ca-pek'},{id:'Kangen',zh:'想念',pron:'ka-ngen'},{id:'Nyaman',zh:'舒适安心',pron:'nya-man'},{id:'Tidak nyaman',zh:'不舒适',pron:'ti-dak nya-man'},{id:'Percaya',zh:'相信信任',pron:'per-ca-ya'},{id:'Tidak percaya',zh:'不相信',pron:'ti-dak per-ca-ya'},{id:'Setuju',zh:'同意',pron:'se-tu-ju'},{id:'Tidak setuju',zh:'不同意',pron:'ti-dak se-tu-ju'},{id:'Menurut saya',zh:'我认为',pron:'me-nu-rut sa-ya'},{id:'Serius',zh:'认真严肃',pron:'se-ri-us'},
+{id:'Bercanda',zh:'开玩笑',pron:'ber-can-da'},{id:'Lucu',zh:'有趣可爱',pron:'lu-cu'},{id:'Keren',zh:'酷厉害',pron:'ke-ren'},{id:'Mantap',zh:'棒不错',pron:'man-tap'},{id:'Gokil',zh:'太厉害了俚语',pron:'go-kil'},{id:'Susah',zh:'难麻烦',pron:'su-sah'},{id:'Mudah',zh:'容易',pron:'mu-dah'},{id:'Penting',zh:'重要',pron:'pen-ting'},{id:'Benar',zh:'对正确',pron:'be-nar'},{id:'Salah',zh:'错',pron:'sa-lah'},
+{id:'Minta maaf',zh:'道歉请原谅',pron:'min-ta ma-af'},{id:'Maafkan saya',zh:'请原谅我',pron:'ma-af-kan sa-ya'},{id:'Tidak apa-apa',zh:'没关系',pron:'ti-dak a-pa a-pa'},{id:'Terserah',zh:'随便无所谓',pron:'ter-se-rah'},{id:'Entah',zh:'不知道说不准',pron:'en-tah'},{id:'Mungkin',zh:'也许可能',pron:'mung-kin'},{id:'Pasti',zh:'一定肯定',pron:'pas-ti'},{id:'Semoga',zh:'希望但愿',pron:'se-mo-ga'},{id:'Insya Allah',zh:'如果真主意愿',pron:'in-sya al-lah'},{id:'Alhamdulillah',zh:'感谢真主一切顺利',pron:'al-ham-du-lil-lah'},
+]},
+];
+
+const PHRASES=[
+{cat:'基础问候',items:[
+{id:'Halo! Apa kabar?',zh:'你好！你好吗？',pron:'ha-lo a-pa ka-bar'},
+{id:'Baik, terima kasih. Kamu?',zh:'很好，谢谢。你呢？',pron:'ba-ik te-ri-ma ka-sih ka-mu'},
+{id:'Lama tidak bertemu!',zh:'好久不见！',pron:'la-ma ti-dak ber-te-mu'},
+{id:'Selamat datang!',zh:'欢迎！',pron:'se-la-mat da-tang'},
+{id:'Hati-hati di jalan!',zh:'路上小心！',pron:'ha-ti ha-ti di ja-lan'},
+]},
+{cat:'自我介绍',items:[
+{id:'Nama saya ___. Senang bertemu!',zh:'我叫___。很高兴认识你！',pron:'na-ma sa-ya se-nang ber-te-mu'},
+{id:'Saya dari Tiongkok.',zh:'我来自中国。',pron:'sa-ya da-ri tiong-kok'},
+{id:'Saya sedang belajar bahasa Indonesia.',zh:'我在学印尼语。',pron:'sa-ya se-dang be-la-jar ba-ha-sa in-do-ne-sia'},
+{id:'Bahasa Indonesia saya masih kurang.',zh:'我的印尼语还不太好。',pron:'ba-ha-sa in-do-ne-sia sa-ya ma-sih ku-rang'},
+{id:'Saya tinggal di sini sudah lama.',zh:'我在这里住很久了。',pron:'sa-ya ting-gal di si-ni su-dah la-ma'},
+]},
+{cat:'沟通技巧',items:[
+{id:'Bisa bicara pelan-pelan?',zh:'能说慢一点吗？',pron:'bi-sa bi-ca-ra pe-lan pe-lan'},
+{id:'Bisa ulangi sekali lagi?',zh:'能再说一遍吗？',pron:'bi-sa u-la-ngi se-ka-li la-gi'},
+{id:'Saya tidak mengerti.',zh:'我不明白。',pron:'sa-ya ti-dak me-nger-ti'},
+{id:'Apa artinya itu?',zh:'那是什么意思？',pron:'a-pa ar-ti-nya i-tu'},
+{id:'Bagaimana cara mengucapkannya?',zh:'这个怎么发音？',pron:'ba-gai-ma-na ca-ra meng-u-cap-kan-nya'},
+]},
+{cat:'餐厅点餐',items:[
+{id:'Minta menunya, tolong.',zh:'请给我菜单。',pron:'min-ta me-nu-nya to-long'},
+{id:'Saya mau pesan ini.',zh:'我要点这个。',pron:'sa-ya mau pe-san i-ni'},
+{id:'Tidak pakai pedas.',zh:'不要辣。',pron:'ti-dak pa-kai pe-das'},
+{id:'Minta bill-nya.',zh:'请结账。',pron:'min-ta bil-nya'},
+{id:'Enak sekali! Terima kasih.',zh:'太好吃了！谢谢。',pron:'e-nak se-ka-li te-ri-ma ka-sih'},
+]},
+{cat:'问路出行',items:[
+{id:'Di mana toilet?',zh:'洗手间在哪里？',pron:'di ma-na toi-let'},
+{id:'Berapa jauh ke stasiun?',zh:'到火车站有多远？',pron:'be-ra-pa ja-uh ke sta-si-un'},
+{id:'Tolong antar saya ke hotel.',zh:'请送我去酒店。',pron:'to-long an-tar sa-ya ke ho-tel'},
+{id:'Bisa lewat jalan mana?',zh:'走哪条路？',pron:'bi-sa le-wat ja-lan ma-na'},
+{id:'Berapa lama perjalanannya?',zh:'要走多久？',pron:'be-ra-pa la-ma per-ja-la-nan-nya'},
+]},
+{cat:'紧急情况',items:[
+{id:'Tolong! Saya butuh bantuan!',zh:'救命！我需要帮助！',pron:'to-long sa-ya bu-tuh ban-tu-an'},
+{id:'Panggil polisi!',zh:'叫警察！',pron:'pang-gil po-li-si'},
+{id:'Panggil ambulans!',zh:'叫救护车！',pron:'pang-gil am-bu-lans'},
+{id:'Saya sakit. Di mana rumah sakit?',zh:'我生病了。医院在哪里？',pron:'sa-ya sa-kit di ma-na ru-mah sa-kit'},
+{id:'Saya kehilangan dompet saya.',zh:'我的钱包丢了。',pron:'sa-ya ke-hi-lang-an dom-pet sa-ya'},
+]},
+];
+
+const CONVOS=[
+{title:'认识新朋友',steps:[
+{who:'id',text:'Halo! Nama saya Rina. Siapa nama kamu?',trans:'你好！我叫Rina。你叫什么名字？'},
+{who:'you',opts:[{text:'Nama saya ___. Senang bertemu!',note:'✓ 非常好！senang bertemu = 很高兴认识你'},{text:'Saya tidak tahu.',note:'✗ 这是"我不知道"，用错场合了'}]},
+{who:'id',text:'Senang bertemu juga! Kamu dari mana?',trans:'我也很高兴认识你！你从哪里来？'},
+{who:'you',opts:[{text:'Saya dari Tiongkok. Kamu?',note:'✓ 棒！还反问了对方，很自然'},{text:'Saya tidak mau.',note:'✗ 这是"我不想要"，答非所问'}]},
+{who:'id',text:'Saya dari Surabaya. Sudah lama di sini?',trans:'我来自泗水。在这里很久了吗？'},
+{who:'you',opts:[{text:'Baru beberapa bulan. Masih belajar bahasa Indonesia.',note:'✓ 完美！baru=才，beberapa bulan=几个月'},{text:'Saya lapar.',note:'✗ 这是"我饿了"，跑题了'}]},
+{who:'id',text:'Wah, bagus sekali! Bahasa Indonesia kamu sudah lancar!',trans:'哇，太棒了！你的印尼语已经很流利了！'},
+{who:'you',opts:[{text:'Terima kasih! Masih banyak yang harus belajar.',note:'✓ 完美！谦虚而自然的回答'},{text:'Halo!',note:'✗ Halo是打招呼，这里用错了'}]},
+]},
+{title:'在餐厅点餐',steps:[
+{who:'id',text:'Selamat datang! Mau pesan apa?',trans:'欢迎！想点什么？'},
+{who:'you',opts:[{text:'Minta menunya dulu, tolong.',note:'✓ 先看菜单，很自然'},{text:'Saya tidak mau makan.',note:'✗ 来餐厅说"我不想吃"，不对'}]},
+{who:'id',text:'Ini menunya. Sudah siap pesan?',trans:'这是菜单。准备好点餐了吗？'},
+{who:'you',opts:[{text:'Satu nasi goreng, tidak pedas. Dan es teh manis.',note:'✓ 完整的点餐，很棒！'},{text:'Berapa harganya?',note:'○ 可以，但还没点就先问价格有点奇怪'}]},
+{who:'id',text:'Makan di sini atau bungkus?',trans:'在这里吃还是打包带走？'},
+{who:'you',opts:[{text:'Makan di sini.',note:'✓ 正确！在这里吃'},{text:'Bungkus, tolong.',note:'✓ 也对！打包带走'}]},
+{who:'id',text:'Pesanannya sudah siap. Selamat makan!',trans:'您的餐点好了。请慢用！'},
+{who:'you',opts:[{text:'Terima kasih! Enak banget!',note:'✓ 太棒了！enak banget=超好吃'},{text:'Mahal sekali!',note:'✗ 太贵了，在这里说不太礼貌'}]},
+]},
+{title:'购物砍价',steps:[
+{who:'id',text:'Selamat datang! Ada yang bisa saya bantu?',trans:'欢迎！有什么我可以帮您的吗？'},
+{who:'you',opts:[{text:'Saya mau lihat-lihat dulu.',note:'✓ 随便逛逛，很自然'},{text:'Saya tidak mau beli.',note:'✗ 一进门就说不买，有点奇怪'}]},
+{who:'id',text:'Silakan. Ini ada diskon hari ini lho!',trans:'请便。今天有折扣哦！'},
+{who:'you',opts:[{text:'Berapa harganya yang ini?',note:'✓ 问价格，很自然'},{text:'Gratis?',note:'○ 开玩笑问是否免费，有点幽默'}]},
+{who:'id',text:'Harganya dua ratus ribu.',trans:'价格是二十万印尼盾（约100元）。'},
+{who:'you',opts:[{text:'Bisa kurang? Mahal sekali.',note:'✓ 讨价还价，很地道！'},{text:'Baik, saya beli.',note:'✓ 直接买，也可以'}]},
+{who:'id',text:'Oke, satu delapan puluh ribu deh. Pas ya!',trans:'好吧，十八万印尼盾，不还价了哦！'},
+{who:'you',opts:[{text:'Oke, deal! Saya bayar tunai.',note:'✓ 完美成交！bayar tunai=付现金'},{text:'Terima kasih, saya pikir-pikir dulu.',note:'✓ 也对！说考虑一下，很礼貌'}]},
+]},
+];
+
+let currentTopic=0,flashCards=[],flashOrder=[],flashIdx=0,known=new Set();
+let quizCards=[],quizOrder=[],quizIdx=0,quizCorrect=0,quizTotal=0;
+let convoIdx=0,convoStep=0,convoTurns=0,isDailyMode=false,currentAudio=null,streak=0;
+
+function speak(text,btnEl){
+  if(currentAudio){currentAudio.pause();currentAudio=null;}
+  document.querySelectorAll('.spk.playing').forEach(b=>b.classList.remove('playing'));
+  if(btnEl)btnEl.classList.add('playing');
+  const url='https://translate.google.com/translate_tts?ie=UTF-8&tl=id&client=tw-ob&q='+encodeURIComponent(text);
+  const audio=new Audio(url);currentAudio=audio;audio.playbackRate=0.9;
+  audio.onended=()=>{if(btnEl)btnEl.classList.remove('playing');currentAudio=null;};
+  audio.onerror=()=>{if(btnEl)btnEl.classList.remove('playing');fbSpeak(text);};
+  audio.play().catch(()=>fbSpeak(text));
+}
+function fbSpeak(text){
+  if(!('speechSynthesis'in window))return;
+  const u=new SpeechSynthesisUtterance(text);u.lang='id-ID';u.rate=0.8;
+  const v=speechSynthesis.getVoices().find(v=>v.lang.startsWith('id'));if(v)u.voice=v;
+  speechSynthesis.speak(u);
+}
+function mkSpk(text,small){
+  const safe=text.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+  return `<button class="spk" style="font-size:${small?'10px':'11px'}" onclick="event.stopPropagation();speak('${safe}',this)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 5.5h2.5L8 2.5v11L4.5 10.5H2z"/><path d="M10 5.5c1.1.6 1.8 1.7 1.8 3s-.7 2.4-1.8 3"/></svg>听</button>`;
+}
+function detectVoice(){
+  const p=document.getElementById('vpill'),l=document.getElementById('vlbl');
+  const a=new Audio('https://translate.google.com/translate_tts?ie=UTF-8&tl=id&client=tw-ob&q=halo');
+  a.oncanplay=()=>{p.className='vpill ok';l.textContent='Google印尼语语音·发音准确';};
+  a.onerror=()=>{p.className='vpill warn';l.textContent='网络受限，使用系统备用语音';};
+  a.load();
+}
+function buildGrid(){
+  document.getElementById('topic-grid').innerHTML=TOPICS.map((t,i)=>{
+    const done=t.words.filter(w=>known.has(i+':'+w.id)).length;
+    const pct=Math.round((done/t.words.length)*100);
+    return `<div class="tc ${i===currentTopic?'sel':''}" onclick="selectTopic(${i},this)">
+      <div class="tc-icon">${t.icon}</div><div class="tc-name">${t.name}</div>
+      <div class="tc-count">${t.words.length}个词</div>
+      ${done>0?`<div class="tc-prog">${pct}%</div>`:''}
+    </div>`;
+  }).join('');
+}
+function selectTopic(i,el){currentTopic=i;isDailyMode=false;document.querySelectorAll('.tc').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');}
+function startDaily(){
+  isDailyMode=true;
+  const today=new Date().toDateString();
+  let d=parseInt(localStorage.getItem('bb_day')||'0');
+  if(localStorage.getItem('bb_lastday')!==today){d=(d+1)%50;localStorage.setItem('bb_day',d);localStorage.setItem('bb_lastday',today);}
+  const all=TOPICS.flatMap((t,ti)=>t.words.map(w=>({...w,topicIdx:ti,topicName:t.name})));
+  const s=(d*10)%all.length;flashCards=[];
+  for(let i=0;i<10;i++)flashCards.push(all[(s+i)%all.length]);
+  document.getElementById('daily-desc').textContent=`今日第${d+1}/50组·共10个词`;
+  showScreen('flash');
+}
+function updateHome(){
+  document.getElementById('h-known').textContent=known.size;
+  document.getElementById('h-acc').textContent=quizTotal>0?Math.round((quizCorrect/quizTotal)*100)+'%':'—';
+  document.getElementById('h-streak').textContent=streak;
+  document.getElementById('h-pct').textContent=Math.round((known.size/500)*100)+'%';
+  buildGrid();
+}
+function initFlash(){
+  if(!isDailyMode)flashCards=TOPICS[currentTopic].words.map(w=>({...w,topicIdx:currentTopic,topicName:TOPICS[currentTopic].name}));
+  flashOrder=[...Array(flashCards.length).keys()].sort(()=>Math.random()-.5);flashIdx=0;showCard();
+}
+function showCard(){
+  const pct=Math.round((flashIdx/flashCards.length)*100);
+  document.getElementById('f-prog').style.width=pct+'%';
+  document.getElementById('f-lbl').textContent=`第${flashIdx+1}/${flashCards.length}张·${isDailyMode?'每日学习':TOPICS[currentTopic].name}`;
+  const c=flashCards[flashOrder[flashIdx%flashOrder.length]];
+  document.getElementById('f-word').textContent=c.id;
+  document.getElementById('f-zh').textContent=c.zh;
+  document.getElementById('f-pron').textContent=c.pron;
+  document.getElementById('f-cat').textContent=c.topicName||'';
+  document.getElementById('fc').classList.remove('flipped');
+  document.getElementById('spk-flash').classList.remove('playing');
+}
+function flipCard(){document.getElementById('fc').classList.add('flipped');}
+function speakCurrent(){speak(flashCards[flashOrder[flashIdx%flashOrder.length]].id,document.getElementById('spk-flash'));}
+function cardResult(know){
+  const c=flashCards[flashOrder[flashIdx%flashOrder.length]];
+  const key=(c.topicIdx!==undefined?c.topicIdx:currentTopic)+':'+c.id;
+  if(know)known.add(key);else known.delete(key);
+  flashIdx++;if(flashIdx>=flashCards.length){flashIdx=0;flashOrder.sort(()=>Math.random()-.5);}
+  showCard();updateHome();saveProgress();
+}
+function initQuiz(){
+  quizCards=TOPICS[currentTopic].words;
+  quizOrder=[...Array(quizCards.length).keys()].sort(()=>Math.random()-.5);
+  quizIdx=0;quizCorrect=0;quizTotal=0;showQuiz();
+}
+function showQuiz(){
+  if(quizIdx>=quizCards.length){
+    document.getElementById('q-q').textContent=`本轮完成！正确率${Math.round((quizCorrect/quizTotal)*100)}%`;
+    document.getElementById('q-opts').innerHTML='<button class="btn-p" onclick="initQuiz()" style="grid-column:1/-1">再来一轮</button>';
+    document.getElementById('q-fb').textContent='';document.getElementById('q-nxt').style.display='none';
+    document.getElementById('q-listen').innerHTML='';document.getElementById('q-prog').style.width='100%';return;
+  }
+  document.getElementById('q-prog').style.width=Math.round((quizIdx/quizCards.length)*100)+'%';
+  document.getElementById('q-lbl').textContent=`第${quizIdx+1}/${quizCards.length}题`;
+  const correct=quizCards[quizOrder[quizIdx]];
+  const mode=Math.random()>.45?'zh2id':'listen';
+  if(mode==='listen'){
+    document.getElementById('q-q').textContent='听发音，选出对应的印尼语：';
+    document.getElementById('q-listen').innerHTML=mkSpk(correct.id,false)+' <span style="font-size:11px;color:var(--t3)">点击播放</span>';
+    setTimeout(()=>speak(correct.id),300);
+  }else{document.getElementById('q-q').textContent=`"${correct.zh}"用印尼语怎么说？`;document.getElementById('q-listen').innerHTML='';}
+  let pool=quizCards.filter(c=>c.id!==correct.id).sort(()=>Math.random()-.5).slice(0,3);
+  let opts=[correct,...pool].sort(()=>Math.random()-.5);
+  document.getElementById('q-fb').textContent='';document.getElementById('q-nxt').style.display='none';
+  document.getElementById('q-opts').innerHTML=opts.map(o=>{
+    const s=o.id.replace(/'/g,"\\'"),cs=correct.id.replace(/'/g,"\\'");
+    return `<div class="qopt" onclick="checkQuiz(this,'${s}','${cs}','${correct.pron}')"><div>${o.id}</div><div style="margin-top:4px">${mkSpk(o.id,true)}</div></div>`;
+  }).join('');
+}
+function checkQuiz(el,chosen,correct,pron){
+  if(el.classList.contains('disabled'))return;quizTotal++;
+  document.querySelectorAll('.qopt').forEach(o=>{o.classList.add('disabled');if(o.querySelector('div').textContent.trim()===correct)o.classList.add('correct');});
+  if(chosen===correct){quizCorrect++;el.classList.add('correct');document.getElementById('q-fb').textContent='✓ 正确！'+pron;}
+  else{el.classList.add('wrong');document.getElementById('q-fb').textContent='✗ 正确：'+correct+'·'+pron;}
+  speak(correct);document.getElementById('q-nxt').style.display='block';updateHome();saveProgress();
+}
+function nextQuiz(){quizIdx++;showQuiz();}
+function initConvo(){
+  document.getElementById('convo-sel').innerHTML=CONVOS.map((c,i)=>
+    `<button class="nb ${i===convoIdx?'active':''}" style="margin-right:6px;margin-bottom:6px" onclick="selectConvo(${i})">${c.title}</button>`
+  ).join('');
+  convoStep=0;document.getElementById('cwrap').innerHTML='';document.getElementById('copts').innerHTML='';document.getElementById('cnote').innerHTML='';
+  renderConvo();
+}
+function selectConvo(i){convoIdx=i;initConvo();}
+function renderConvo(){
+  const steps=CONVOS[convoIdx].steps,step=steps[convoStep];if(!step)return;
+  const wrap=document.getElementById('cwrap');
+  if(step.who==='id'){
+    const b=document.createElement('div');b.className='bub bub-id';
+    b.innerHTML=`<div style="font-weight:500">${step.text}</div><div class="bub-trans">${step.trans}</div><div style="margin-top:6px">${mkSpk(step.text,true)}</div>`;
+    wrap.appendChild(b);speak(step.text);convoStep++;setTimeout(renderConvo,700);
+  }else{
+    document.getElementById('copts').innerHTML='<div class="slbl" style="margin-bottom:8px">选择你的回答：</div>'+
+      step.opts.map((o,i)=>{const s=o.note.replace(/'/g,"\\'");return `<button class="copt" onclick="pickConvo(${i},'${s}')">${o.text}<div style="margin-top:4px">${mkSpk(o.text,true)}</div></button>`;}).join('');
+  }
+}
+function pickConvo(i,note){
+  const step=CONVOS[convoIdx].steps[convoStep];
+  document.querySelectorAll('.copt').forEach((b,bi)=>{b.disabled=true;b.style.cursor='default';if(bi===i)b.classList.add('picked');else b.style.opacity='0.4';});
+  const wrap=document.getElementById('cwrap');
+  const b=document.createElement('div');b.className='bub bub-you';b.textContent=step.opts[i].text;
+  wrap.appendChild(b);speak(step.opts[i].text);
+  document.getElementById('cnote').innerHTML=`<div class="cnote">${note}</div>`;
+  convoTurns++;convoStep++;
+  setTimeout(()=>{
+    document.getElementById('copts').innerHTML='';document.getElementById('cnote').innerHTML='';
+    if(convoStep<CONVOS[convoIdx].steps.length)renderConvo();
+    else document.getElementById('copts').innerHTML='<div style="text-align:center;padding:12px;color:var(--t3);font-size:13px">🎉 对话完成！</div><button class="btn-p" onclick="initConvo()">再练一次</button>';
+    updateHome();
+  },600);
+}
+function renderPhrase(filter){
+  let html='';
+  PHRASES.forEach(sec=>{
+    const items=filter?sec.items.filter(p=>p.id.toLowerCase().includes(filter)||p.zh.includes(filter)):sec.items;
+    if(!items.length)return;
+    html+=`<div class="pcat">${sec.cat}</div>`;
+    items.forEach(p=>{
+      const s=p.id.replace(/'/g,"\\'");
+      html+=`<div class="pitem"><div class="ptexts"><div class="pid">${p.id}</div><div class="pzh">${p.zh}</div><div class="ppron">${p.pron}</div></div><button class="spk" onclick="speak('${s}',this)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 5.5h2.5L8 2.5v11L4.5 10.5H2z"/><path d="M10 5.5c1.1.6 1.8 1.7 1.8 3s-.7 2.4-1.8 3"/></svg>听</button></div>`;
+    });
+  });
+  document.getElementById('phrase-list').innerHTML=html||'<div style="color:var(--t3);text-align:center;padding:20px;font-size:13px">没有找到相关短语</div>';
+}
+function searchPhrase(val){renderPhrase(val.toLowerCase());}
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  const idx=['home','flash','quiz','convo','phrase'].indexOf(id);
+  if(idx>=0)document.querySelectorAll('.nb')[idx].classList.add('active');
+  if(id==='flash')initFlash();if(id==='quiz')initQuiz();if(id==='convo')initConvo();
+  if(id==='phrase')renderPhrase();if(id==='home'){isDailyMode=false;updateHome();}
+}
+function saveProgress(){
+  try{
+    localStorage.setItem('bb_known',JSON.stringify([...known]));
+    localStorage.setItem('bb_qc',quizCorrect);localStorage.setItem('bb_qt',quizTotal);localStorage.setItem('bb_convo',convoTurns);
+    const today=new Date().toDateString();
+    if(localStorage.getItem('bb_studyday')!==today){localStorage.setItem('bb_studyday',today);streak++;localStorage.setItem('bb_streak',streak);}
+  }catch(e){}
+}
+function loadProgress(){
+  try{
+    const k=localStorage.getItem('bb_known');if(k)known=new Set(JSON.parse(k));
+    quizCorrect=parseInt(localStorage.getItem('bb_qc')||'0');quizTotal=parseInt(localStorage.getItem('bb_qt')||'0');
+    convoTurns=parseInt(localStorage.getItem('bb_convo')||'0');streak=parseInt(localStorage.getItem('bb_streak')||'0');
+  }catch(e){}
+}
+loadProgress();detectVoice();updateHome();
+setInterval(saveProgress,10000);window.addEventListener('beforeunload',saveProgress);
+</script>
+</body>
+</html>
